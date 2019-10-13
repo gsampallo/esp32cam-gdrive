@@ -1,6 +1,7 @@
 function doPost(e) {
   var data = Utilities.base64Decode(e.parameters.data);
-  var blob = Utilities.newBlob(data, e.parameters.mimetype, e.parameters.filename);
+  var nombreArchivo = Utilities.formatDate(new Date(), "GMT-3", "yyyyMMdd_HHmmss")+".jpg";
+  var blob = Utilities.newBlob(data, e.parameters.mimetype, nombreArchivo );
   
   
    // Save the photo to Google Drive
@@ -11,6 +12,5 @@ function doPost(e) {
     folder = DriveApp.createFolder("ESP32-CAM");
   }
   var file = folder.createFile(blob); 
-  
-  return ContentService.createTextOutput("Done.")
+  return ContentService.createTextOutput('Completo')
 }
