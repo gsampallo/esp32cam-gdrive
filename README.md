@@ -1,6 +1,6 @@
 # esp32cam-gdrive
 
-![alt text](https://www.gsampallo.com/blog/wp-content/uploads/2019/10/esp32-gdrive.jpg "Diagrama")
+![alt text](http://www.gsampallo.com/blog/wp-content/uploads/2019/10/esp32-gdrive.jpg "Diagrama")
 
 
 Upload an image directly from ESP32-CAM to Google Drive
