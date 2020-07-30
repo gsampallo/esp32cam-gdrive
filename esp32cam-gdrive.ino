@@ -34,6 +34,33 @@ int waitingTime = 30000; //Wait 30 seconds to google response.
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
+WiFiClientSecure client;
+const char* test_root_ca = \
+                           "-----BEGIN CERTIFICATE-----\n" \
+                           "MIIETDCCAzSgAwIBAgILBAAAAAABL07hSVIwDQYJKoZIhvcNAQEFBQAwVzELMAkG\n" \
+                           "A1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jv\n" \
+                           "b3QgQ0ExGzAZBgNVBAMTEkdsb2JhbFNpZ24gUm9vdCBDQTAeFw0wNjEyMTUwODAw\n" \
+                           "MDBaFw0yODAxMjgxMjAwMDBaMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBD\n" \
+                           "QSAtIFIyMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWdu\n" \
+                           "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAps8kDr4ubyiZRULEqz4h\n" \
+                           "VJsL03+EcPoSs8u/h1/Gf4bTsjBc1v2t8Xvc5fhglgmSEPXQU977e35ziKxSiHtK\n" \
+                           "pspJpl6op4xaEbx6guu+jOmzrJYlB5dKmSoHL7Qed7+KD7UCfBuWuMW5Oiy81hK5\n" \
+                           "61l94tAGhl9eSWq1OV6INOy8eAwImIRsqM1LtKB9DHlN8LgtyyHK1WxbfeGgKYSh\n" \
+                           "+dOUScskYpEgvN0L1dnM+eonCitzkcadG6zIy+jgoPQvkItN+7A2G/YZeoXgbfJh\n" \
+                           "E4hcn+CTClGXilrOr6vV96oJqmC93Nlf33KpYBNeAAHJSvo/pOoHAyECjoLKA8Kb\n" \
+                           "jwIDAQABo4IBIjCCAR4wDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8w\n" \
+                           "HQYDVR0OBBYEFJviB1dnHB7AagbeWbSaLd/cGYYuMEcGA1UdIARAMD4wPAYEVR0g\n" \
+                           "ADA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBv\n" \
+                           "c2l0b3J5LzAzBgNVHR8ELDAqMCigJqAkhiJodHRwOi8vY3JsLmdsb2JhbHNpZ24u\n" \
+                           "bmV0L3Jvb3QuY3JsMD0GCCsGAQUFBwEBBDEwLzAtBggrBgEFBQcwAYYhaHR0cDov\n" \
+                           "L29jc3AuZ2xvYmFsc2lnbi5jb20vcm9vdHIxMB8GA1UdIwQYMBaAFGB7ZhpFDZfK\n" \
+                           "iVAvfQTNNKj//P1LMA0GCSqGSIb3DQEBBQUAA4IBAQCZIivuijLTDAd+3RsgK1Bq\n" \
+                           "lpEG2r5u13KWrVM/fvWPQufQ62SlZfLz4z0/WzEMfHmEOpeMDx+uwbzy67ig70H9\n" \
+                           "vDGp/MlC5kS+HlbKdYuySTGZ/urpcWSGeo/l1WERQ+hAuzEM4tsYi5l0OGGrJICM\n" \
+                           "+ag710nWZooYc8y8BjmLEDIODdOx9+9mExBZSMjPAcqZzJBymNs67cunu+JscI6m\n" \
+                           "nmhj7Y+3LQWJztlU9k6rHkbbMEk/9mrgAfC8zYTUOfdVjgMVcdOdNO2dxtHIqsWE\n" \
+                           "OTsN/SknUh6Dq0gjhVhQs5XGC7Mm4xYtqDDcA1BtXNEMzSqhR5rPIBvbQ4gfwvzg\n" \
+                           "-----END CERTIFICATE-----\n";
 void setup()
 {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
@@ -52,7 +79,7 @@ void setup()
     Serial.print(".");
     delay(500);
   }
-
+  client.setCACert(test_root_ca);
   Serial.println("");
   Serial.println("STAIP address: ");
   Serial.println(WiFi.localIP());
@@ -104,8 +131,7 @@ void loop() {
 
 void saveCapturedImage() {
   Serial.println("Connect to " + String(myDomain));
-  WiFiClientSecure client;
-  
+  client.stop();
   if (client.connect(myDomain, 443)) {
     Serial.println("Connection successful");
     
